@@ -45,7 +45,7 @@ class Tutor : public Usuario{
         public:
                 Tutor(std::string nombre_usuario, std::string contrasena,
                 std::string correo, std::string nombre, std::string apellidos, int edad,
-                std::string id_tutor, std::string asignaturas_impartidas, int alumnos_asignados);
+                std::string id_tutor, std::string asignaturas_impartidas);
 
                 Tutor(){} /*Constructor por Defecto: Permite crear un objeto de la clase
                         Tutor sin necesidad de darle valores iniciales inmediatos.*/
@@ -55,5 +55,56 @@ class Tutor : public Usuario{
                 void Gestionar_alumnos();
                 void Contactar_alumno(std::string id_alumno);
 };
+
+class Alumno : public Usuario{
+
+        private:
+                std::string id_alumno_;
+                std::string asignaturas_;
+                int curso_;
+                std::string carrera_;
+        
+        public:
+                Alumno(std::string nombre_usuario, std::string contrasena,
+                std::string correo, std::string nombre, std::string apellidos, int edad,
+                std::string id_alumno, std::string carrera, int curso);
+
+                Alumno(){} /*Constructor por Defecto: Permite crear un objeto de la clase
+                        Alumno sin necesidad de darle valores iniciales inmediatos.*/
+                
+                std::string getIdAlumno() const {return id_alumno_;}
+                std::string getCarrera() const {return carrera_;}
+                std::string getDatosAcademicos() const {return "Curso: " + to_string(curso_) + ", Asignaturas: " + asignaturas_;}
+                
+                void Preguntar_tutor();
+};
+
+class Coordinador : public Usuario{
+
+        private:
+                std::string id_coordinador_;
+        
+        public:
+                Coordinador(std::string nombre_usuario, std::string contrasena,
+                std::string correo, std::string nombre, std::string apellidos, int edad,
+                std::string id_coordinador);
+
+                void Asignar_tutores(); 
+                std::string Solicitar_informe();
+};
+
+class Alertas{
+
+        private:
+                std::string id_alerta_;
+                std::string destinatario_;
+                std::string informacion_;
+        
+        public:
+                Alertas(std::string destinatario, std::string informacion);
+
+                void Enviar_alerta();
+};
+
 
 #endif
