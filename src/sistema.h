@@ -106,5 +106,42 @@ class Alertas{
                 void Enviar_alerta();
 };
 
+class Chat{
+
+        private:
+                std::string id_chat_;
+                std::string fecha_inicio_;
+                std::string fecha_finalizacion_;
+                std::string mensajes_;
+                int miembros_;
+        
+        public:
+                Chat();
+
+                void Iniciar_chat(std::string usuario1, std::string usuario2);
+                void Finalizar_chat();
+
+                void Enviar_mensaje(std::string emisor, std::string destinatario, std::string texto);
+};
+
+class Informes{
+
+    private:
+            std::string id_informe_;
+            std::string filtros_;
+            std::string informacion_;
+
+    public:
+            Informes(std::string id_informe, std::string filtros, std::string informacion);
+            Informes() {} /*Constructor por Defecto: Permite crear un objeto de la clase
+                        Informes sin necesidad de darle valores iniciales inmediatos.*/
+
+            void Guardar_informe();
+};
+
+//Prototipos globales
+void ejecutarModuloAsignacion(Coordinador& coord);
+void ejecutarModuloMensajeria(Usuario& usuarioActual);
+void ejecutarModuloAvisos(Tutor& tutorActual);
 
 #endif
