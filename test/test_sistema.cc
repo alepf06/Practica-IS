@@ -1,68 +1,56 @@
-#include "cute/cute.h"           // Ajustado a la estructura estandar
-#include "cute/ide_listener.h"   // Necesario para ver los resultados
-#include "cute/cute_runner.h"    // Necesario para ejecutar
+#include <gtest/gtest.h>
 #include <fstream>
 #include <string>
 #include "sistema.h"
 
-void testHU2_AsignacionCorrecta(){
-	Coordinador c;
-	c.asignarTutor();    // Se introducen datos válidos por consola
-	ASSERTM("Asignación realizada sin errores", true);
+// =======================
+// HU2 Asignación tutor
+// =======================
+
+TEST(testHU2, AsignacionCorrecta){
+    Coordinador c;
+    c.asignarTutor();   // Se introducen datos válidos por consola
+    SUCCEED();          // Si no hay crash, el test pasa
 }
 
-void testHU2_PersistenciaAsignacion(){
-	std::ifstream f("asignaciones.txt");
-	bool existe = f.good();
-	f.close();
+TEST(testHU2, PersistenciaAsignacion){
+    std::ifstream f("asignaciones.txt");
+    bool existe = f.good();
+    f.close();
 
-	ASSERTM("El fichero asignaciones.txt existe y es accesible", existe);
+    EXPECT_TRUE(existe) << "El fichero asignaciones.txt existe y es accesible";
 }
 
-void testHU3_EnvioMensaje(){
+// =======================
+// HU3 Mensajería
+// =======================
+
+TEST(testHU3, EnvioMensaje){
     enviarMensaje("alu1"); // receptor y mensaje por consola
-    ASSERTM("Mensaje enviado correctamente", true);
+    SUCCEED();
 }
 
-void testHU3_PersistenciaMensaje(){
-	std::ifstream f("mensajes.txt");
-	bool existe = f.good();
-	f.close();
+TEST(testHU3, PersistenciaMensaje){
+    std::ifstream f("mensajes.txt");
+    bool existe = f.good();
+    f.close();
 
-	ASSERTM("El fichero mensajes.txt existe y contiene mensajes", existe);
+    EXPECT_TRUE(existe) << "El fichero mensajes.txt existe y contiene mensajes";
 }
 
-void testHU4_GeneracionAutomaticaAlerta(){
-    evaluarAlumno();    // introducir nota < 5 o asistencia < 75
-    ASSERTM("Alerta automática generada por riesgo académico", true);
+// =======================
+// HU4 Alertas automáticas
+// =======================
+
+TEST(testHU4, GeneracionAutomaticaAlerta){
+    evaluarAlumno();   // introducir nota < 5 o asistencia < 75
+    SUCCEED();
 }
 
-void testHU4_PersistenciaAlerta(){
-	std::ifstream f("alertas.txt");
-	bool existe = f.good();
-	f.close();
+TEST(testHU4, PersistenciaAlerta){
+    std::ifstream f("alertas.txt");
+    bool existe = f.good();
+    f.close();
 
-	ASSERTM("El fichero alertas.txt existe y contiene alertas", existe);
+    EXPECT_TRUE(existe) << "El fichero alertas.txt existe y contiene alertas";
 }
-
-// Función que organiza y lanza las pruebas
-void runSuite(){
-    cute::suite s;
-    s.push_back(CUTE(testHU2_AsignacionCorrecta));
-    s.push_back(CUTE(testHU2_PersistenciaAsignacion));
-    s.push_back(CUTE(testHU3_EnvioMensaje));
-    s.push_back(CUTE(testHU3_PersistenciaMensaje));
-    s.push_back(CUTE(testHU4_GeneracionAutomaticaAlerta));
-    s.push_back(CUTE(testHU4_PersistenciaAlerta));
-
-    cute::ide_listener<> lis;
-    cute::makeRunner(lis, s).run();
-}
-
-// El punto de entrada principal
-int main(){
-    runSuite();
-    return 0;
-}
-
-
