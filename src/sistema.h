@@ -17,6 +17,7 @@ class Usuario{
             string usuario;
             string password;
             string rol;
+            int intentos;
 
     public:
             
