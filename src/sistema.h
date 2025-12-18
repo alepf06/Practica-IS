@@ -25,8 +25,8 @@ class Usuario{
             bool login();
             string getUsuario(){ return usuario_; }
             string getRol(){ return rol_; }
-            bool Usuario::crearCuenta();
-            void Usuario::recuperarPassword();
+            bool crearCuenta();
+            void recuperarPassword();
 };
 
 // ==========================================
