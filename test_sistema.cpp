@@ -1,4 +1,6 @@
-#include <cute.h>
+#include "cute/cute.h"           // Ajustado a la estructura estandar
+#include "cute/ide_listener.h"   // Necesario para ver los resultados
+#include "cute/cute_runner.h"    // Necesario para ejecutar
 #include <fstream>
 #include <string>
 #include "sistema.h"
@@ -43,12 +45,24 @@ void testHU4_PersistenciaAlerta(){
 	ASSERTM("El fichero alertas.txt existe y contiene alertas", existe);
 }
 
-cute::suite s;
-s.push_back(CUTE(testHU2_AsignacionCorrecta));
-s.push_back(CUTE(testHU2_PersistenciaAsignacion));
-s.push_back(CUTE(testHU3_EnvioMensaje));
-s.push_back(CUTE(testHU3_PersistenciaMensaje));
-s.push_back(CUTE(testHU4_GeneracionAutomaticaAlerta));
-s.push_back(CUTE(testHU4_PersistenciaAlerta));
+// Función que organiza y lanza las pruebas
+void runSuite(){
+    cute::suite s;
+    s.push_back(CUTE(testHU2_AsignacionCorrecta));
+    s.push_back(CUTE(testHU2_PersistenciaAsignacion));
+    s.push_back(CUTE(testHU3_EnvioMensaje));
+    s.push_back(CUTE(testHU3_PersistenciaMensaje));
+    s.push_back(CUTE(testHU4_GeneracionAutomaticaAlerta));
+    s.push_back(CUTE(testHU4_PersistenciaAlerta));
+
+    cute::ide_listener<> lis;
+    cute::makeRunner(lis, s).run();
+}
+
+// El punto de entrada principal
+int main(){
+    runSuite();
+    return 0;
+}
 
 
