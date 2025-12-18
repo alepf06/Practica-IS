@@ -112,7 +112,7 @@ class Alumno : public Usuario{
 };
 
 // ==========================================
-// CLASE : ALUMNO
+// CLASE : COORDINADOR
 // ==========================================
 class Coordinador : public Usuario{
 
