@@ -1,133 +1,96 @@
-#include "Sistema.h"
+#include "sistema.h"
+#include <fstream>
+#include <iostream>
 #include <sstream>
+using namespace std;
 
-// ==========================================
-// CONSTRUCTOR 
-// ==========================================
-Usuario::Usuario(std::string nombre_usuario, std::string contrasena,
-                 std::string correo, std::string nombre,
-                 std::string apellidos, int edad)
-{
-    nombre_usuario_ = nombre_usuario;
-    contrasena_ = contrasena;
-    correo_ = correo;
-    nombre_ = nombre;
-    apellidos_ = apellidos;
-    edad_ = edad;
+Usuario::Usuario() {
+    intentos_ = 0;
 }
 
-// ==========================================
-// CREAR CUENTA
-// ==========================================
-void Usuario::Crear_cuenta(std::string tipo_usuario)
-{
-    std::ifstream fichero_lectura("general.txt");
-    std::string linea;
+bool Usuario::login() {
+    ifstream f("general.txt");
+    string u, p;
+    cout << "Usuario: "; cin >> u;
+    cout << "Contraseña: "; cin >> p;
 
-    // 1. Comprobar si el usuario ya existe
-    if (fichero_lectura.is_open()) {
-        while (getline(fichero_lectura, linea)) {
-            std::string tipo, usuario;
+    string linea;
+    while (getline(f, linea)) {
+        stringstream ss(linea);
+        getline(ss, usuario_, ';');
+        getline(ss, contraseña_, ';');
+        getline(ss, rol_, ';');
 
-            std::stringstream ss(linea);
-            getline(ss, tipo, ';');
-            getline(ss, usuario, ';');
-
-            if (usuario == nombre_usuario_) {
-                std::cout << "El nombre de usuario ya existe.\n";
-                fichero_lectura.close();
-                return;
-            }
-        }
-        fichero_lectura.close();
-    }
-
-    // 2. Si no existe, crear la cuenta
-    std::ofstream fichero_escritura("general.txt", std::ios::app);
-
-    if (!fichero_escritura.is_open()) {
-        std::cout << "Error al abrir el fichero.\n";
-        return;
-    }
-
-    fichero_escritura << tipo_usuario << ";"
-                      << nombre_usuario_ << ";"
-                      << contrasena_ << ";"
-                      << correo_ << ";"
-                      << nombre_ << ";"
-                      << apellidos_ << ";"
-                      << edad_ << std::endl;
-
-    fichero_escritura.close();
-
-    std::cout << "Cuenta creada correctamente.\n";
-}
-
-// ==========================================
-// INICIAR SESIÓN
-// ==========================================
-void Usuario::Iniciar_sesion()
-{
-    std::ifstream fichero("general.txt");
-    std::string linea;
-
-    if (!fichero.is_open()) {
-        std::cout << "Error al abrir el fichero.\n";
-        return;
-    }
-
-    bool encontrado = false;
-
-    while (getline(fichero, linea)) {
-        std::string tipo, usuario, clave;
-
-        std::stringstream ss(linea);
-        getline(ss, tipo, ';');
-        getline(ss, usuario, ';');
-        getline(ss, clave, ';');
-
-        if (usuario == nombre_usuario_ && clave == contrasena_) {
-            encontrado = true;
-            break;
+        if (usuario_ == u && contraseña_ == p) {
+            ofstream log("general.txt", ios::app);
+            log << "LOGIN;" << usuario_ << endl;
+            log.close();
+            return true;
         }
     }
 
-    fichero.close();
-
-    if (encontrado) {
-        std::cout << "Inicio de sesión correcto.\n";
+    intentos_++;
+    if (intentos_ >= 3) {
+        cout << "Cuenta bloqueada por seguridad\n";
+        return false;
     } else {
-        std::cout << "Usuario o contraseña incorrectos.\n";
+        cout << "Credenciales incorrectas\n";
     }
+    return false;
 }
 
-// ==========================================
-// RECUPERAR CONTRASEÑA
-// ==========================================
-std::string Usuario::Recuperar_contrasena()
-{
-    std::ifstream fichero("general.txt");
-    std::string linea;
+bool Usuario::crearCuenta(){
+    ifstream f("general.txt");
+    string u, p, r, linea;
 
-    if (!fichero.is_open()) {
-        return "Error al abrir el fichero.";
+    cout << "Nuevo usuario: ";
+    cin >> u;
+
+    // Comprobar si ya existe
+    while (getline(f, linea)) {
+        stringstream ss(linea);
+        getline(ss, usuario_, ';');
+
+        if (usuario_ == u) {
+            cout << "El usuario ya existe\n";
+            f.close();
+            return false;
+        }
     }
+    f.close();
 
-    while (getline(fichero, linea)) {
-        std::string tipo, usuario, clave, correo;
+    cout << "Contraseña: ";
+    cin >> p;
+    cout << "Rol (Alumno/Tutor/Coordinador): ";
+    cin >> r;
 
-        std::stringstream ss(linea);
-        getline(ss, tipo, ';');
-        getline(ss, usuario, ';');
-        getline(ss, clave, ';');
-        getline(ss, correo, ';');
+    ofstream out("general.txt", ios::app);
+    out << u << ";" << p << ";" << r << endl;
+    out.close();
 
-        if (usuario == nombre_usuario_ && correo == correo_) {
-            fichero.close();
-            return "La contraseña es: " + clave;
+    cout << "Cuenta creada correctamente\n";
+    return true;
+}
+
+void Usuario::recuperarPassword() {
+    ifstream f("general.txt");
+    string u, linea;
+
+    cout << "Introduce tu usuario: ";
+    cin >> u;
+
+    while (getline(f, linea)) {
+        stringstream ss(linea);
+        getline(ss, usuario_, ';');
+        getline(ss, contraseña_, ';');
+
+        if (usuario_ == u) {
+            cout << "Tu contraseña es: " << contraseña_ << endl;
+            f.close();
+            return;
         }
     }
 
-    fichero.close();
-    return "Usuario no encontrado.";
+    f.close();
+    cout << "Usuario no encontrado\n";
 }
