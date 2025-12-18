@@ -14,17 +14,19 @@ class Usuario{
             /*Atributos marcados como 'protected' para permitir que las clases hijas
             (Tutor, Alumno, Coordinador) accedan a ellos directamente si es necesario.*/
 
-            string usuario;
-            string password;
-            string rol;
-            int intentos;
+            string usuario_;
+            string contraseña_;
+            string rol_;
+            int intentos_;
 
     public:
             
             Usuario();
             bool login();
-            string getUsuario();
-            string getRol();
+            string getUsuario(){ return usuario_; }
+            string getRol(){ return rol_; }
+            bool Usuario::crearCuenta();
+            void Usuario::recuperarPassword();
 };
 
 // ==========================================
