@@ -1,10 +1,10 @@
 #include "sistema.h"
 #include <iostream>
+#include <cctype>
 
 using namespace std;
 
 int main(){
-    Usuario u;
     int opcion;
 
     do{
@@ -14,7 +14,7 @@ int main(){
         cout << "0. Salir\n";
         cout << "Opción: ";
         cin >> opcion;
-
+        Usuario u;
         switch(opcion){
             case 1:
                 if (!u.login()) break;
@@ -24,7 +24,7 @@ int main(){
                 // =============================
                 // MENU COORDINADOR
                 // =============================
-                if (u.getRol() == "COORDINADOR"){
+                if (u.getRol() == "Coordinador"){
                     Coordinador c;
                     do{
                         cout << "\n--- MENU COORDINADOR ---\n";
@@ -53,7 +53,7 @@ int main(){
                 // =============================
                 // MENU TUTOR
                 // =============================
-                else if (u.getRol() == "TUTOR"){
+                else if (u.getRol() == "Tutor"){
                     Tutor t;
                     do{
                         cout << "\n--- MENU TUTOR ---\n";

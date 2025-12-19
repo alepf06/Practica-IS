@@ -19,7 +19,7 @@ void enviarMensaje(string emisor){
     f.close();
 }
 
-void verMensajes(const string& usuario){
+void verMensajes(string usuario){
     ifstream f("mensajes.txt");
     if (!f.is_open()) {
         cout << "No se puede abrir el archivo de mensajes.\n";
