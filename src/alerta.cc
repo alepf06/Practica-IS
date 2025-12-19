@@ -5,12 +5,6 @@
 
 using namespace std;
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <string>
-using namespace std;
-
 void evaluarAlumno() {
     string alumno;
     float nota;
@@ -47,15 +41,11 @@ void evaluarAlumno() {
         if (nota < 5) f << " Nota baja";
         if (asistencia < 75) f << " Baja asistencia";
         f << endl;
-        f.close();
-
-        cout << "Alerta generada automáticamente\n";
-    } else {
-        cout << "Alumno sin riesgo\n";
+        f.close();   
     }
 }
 
-void verAlertasTutor(string t) {
+void verAlertas(string t) {
     ifstream f("alertas.txt");
     if (!f.is_open()) {
         cout << "No se puede abrir el archivo de alertas.\n";
