@@ -1,0 +1,1 @@
+/usr/local/opt/gcc-15.2.0-64/bin/c++ "CMakeFiles/main-sistema.dir/main-sistema.cc.o" -o main-sistema  libsistema.a
