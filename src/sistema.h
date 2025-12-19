@@ -2,8 +2,6 @@
 #define SISTEMA_H
 
 #include <string>
-using namespace std;
-
 
 // ==========================================
 // CLASE BASE: USUARIO
