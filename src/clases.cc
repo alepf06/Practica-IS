@@ -9,9 +9,9 @@ Usuario::Usuario() {
 }
 
 bool Usuario::login() {
-    ifstream f("general.txt");
     string u, p;
-    while(intentos_<=3){
+    while(intentos_<3){
+    ifstream f("general.txt");
     cout << "Usuario: "; cin >> u;
     cout << "Contraseña: "; cin >> p;
 
@@ -38,6 +38,7 @@ bool Usuario::login() {
         cout << "Credenciales incorrectas\n";
     }
 }
+return false;
 }
 
 bool Usuario::crearCuenta(){
