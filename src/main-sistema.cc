@@ -28,11 +28,12 @@ int main(){
                     Coordinador c;
                     do{
                         cout << "\n--- MENU COORDINADOR ---\n";
-                        cout << "1. Asignar tutor\n";
+                        cout << "1. Asignar tutor (Manual)\n";
                         cout << "2. Ver asignaciones\n";
                         cout << "3. Evaluar alumno\n";
                         cout << "4. Enviar mensaje\n";
                         cout << "5. Ver mensajes\n";
+                        cout << "6. Asignacion automatica\n"; // Nueva opción
                         cout << "0. Salir\n";
                         cout << "Opción: ";
                         cin >> op;
@@ -43,6 +44,7 @@ int main(){
                             case 3: evaluarAlumno(); break;
                             case 4: enviarMensaje(u.getUsuario()); break;
                             case 5: verMensajes(u.getUsuario()); break;
+                            case 6: c.asignacionAutomatica(); break;
                             case 0: break;
                             default: cout << "Opción no válida\n";
                         }
