@@ -6,6 +6,26 @@
 
 using namespace std;
 
+// Función auxiliar para verificar si el usuario existe en general.txt
+bool usuarioExiste(string nombreBuscado) {
+    ifstream f("general.txt");
+    if (!f.is_open()) return false;
+
+    string linea, u;
+    // Leemos línea por línea
+    while (getline(f, linea)) {
+        stringstream ss(linea);
+        getline(ss, u, ';'); // El usuario es el primer campo
+        
+        if (u == nombreBuscado) {
+            f.close();
+            return true;
+        }
+    }
+    f.close();
+    return false;
+}
+
 void enviarMensaje(string emisor){
     string receptor;
     string mensaje;
