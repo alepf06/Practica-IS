@@ -17,10 +17,16 @@ bool existeUsuarioYRol(string nombre, string rolEsperado) {
 
     string linea, u, p, r;
     while (getline(f, linea)) {
+        // Filtro de seguridad: saltar líneas vacías
+        if (linea.empty()) continue;
+        
         stringstream ss(linea);
         getline(ss, u, ';'); // Usuario
         getline(ss, p, ';'); // Contraseña
         getline(ss, r, ';'); // Rol
+
+        // Filtro de seguridad: Si el rol no es válido, ignoramos la línea (ej. LOGIN)
+        if (r != "Alumno" && r != "Tutor" && r != "Coordinador") continue;
 
         // Comprobamos nombre Y rol
         if (u == nombre && r == rolEsperado) {
@@ -35,15 +41,22 @@ bool existeUsuarioYRol(string nombre, string rolEsperado) {
 // Función auxiliar para ver listas (Soluciona "listar alumnos y tutores")
 void Coordinador::listarUsuariosPorRol(string rolBuscado) {
     ifstream f("general.txt");
+    if (!f.is_open()) return;
+    
     string linea, u, p, r;
     
     cout << "Listado de " << rolBuscado << "s disponibles:\n";
     bool hay = false;
     while(getline(f, linea)){
+        
         stringstream ss(linea);
+
         getline(ss, u, ';');
         getline(ss, p, ';');
         getline(ss, r, ';');
+
+        // Limpiamos caracteres invisibles (opcional, pero útil en Windows/Linux)
+        if (!r.empty() && r.back() == '\r') r.pop_back();
         
         if(r == rolBuscado){
             cout << "- " << u << endl;
@@ -86,6 +99,7 @@ void Coordinador::asignarTutor(){
 
     //Verificar si el alumno YA tiene tutor (opcional pero recomendado)
     ifstream fCheck("asignaciones.txt");
+    if (fCheck.is_open()) {
     string linea, t, a;
     while(getline(fCheck, linea)){
         stringstream ss(linea);
@@ -97,6 +111,7 @@ void Coordinador::asignarTutor(){
         }
     }
     fCheck.close();
+}
 
     ofstream f("asignaciones.txt", ios::app);
     if(f.is_open()){
@@ -123,10 +138,16 @@ void Coordinador::asignacionAutomatica(){
     
     string linea, u, p, r;
     while(getline(fGen, linea)){
+        if (linea.empty()) continue;
+        
         stringstream ss(linea);
         getline(ss, u, ';'); 
         getline(ss, p, ';'); 
         getline(ss, r, ';');
+
+        // Limpieza de formato (CRLF)
+        if (!r.empty() && r.back() == '\r') r.pop_back();
+        
         if(r == "Tutor") tutores.push_back(u);
         else if(r == "Alumno") alumnos.push_back(u);
     }
@@ -176,14 +197,11 @@ void Coordinador::asignacionAutomatica(){
             cout << "Asignando " << alumno << " -> " << tutorAsignado << endl;
             
             asignadosCount++;
-            
-            tutorIndex++;
-            if (tutorIndex >= tutores.size()) {
-                tutorIndex = 0; // Volver al primer tutor
+            tutorIndex = (tutorIndex + 1) % tutores.size();
             }
         }
-    }
     fOut.close();
+    
 
     if(asignadosCount > 0)
         cout << ">> Se han realizado " << asignadosCount << " asignaciones automáticas.\n";
