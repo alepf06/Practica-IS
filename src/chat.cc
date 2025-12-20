@@ -7,21 +7,32 @@
 using namespace std;
 
 // Función auxiliar para verificar si el usuario existe en general.txt
+// Función con mensajes de depuración (DEBUG)
 bool usuarioExiste(string nombreBuscado) {
     ifstream f("general.txt");
-    if (!f.is_open()) return false;
+    if (!f.is_open()) {
+        cout << "[DEBUG] Error: No encuentro el archivo general.txt\n";
+        return false;
+    }
 
     string linea, u;
-    // Leemos línea por línea
+    cout << "[DEBUG] Buscando a '" << nombreBuscado << "' en la base de datos...\n";
+
     while (getline(f, linea)) {
         stringstream ss(linea);
-        getline(ss, u, ';'); // El usuario es el primer campo
+        getline(ss, u, ';'); // Leemos el nombre del usuario de la línea
         
+        // Descomenta la siguiente línea si quieres ver todas las comparaciones:
+        // cout << "[DEBUG] Comparando con: '" << u << "'\n";
+
         if (u == nombreBuscado) {
+            cout << "[DEBUG] ¡Encontrado! El usuario existe.\n";
             f.close();
             return true;
         }
     }
+    
+    cout << "[DEBUG] Fin de la búsqueda. Usuario no encontrado.\n";
     f.close();
     return false;
 }
@@ -31,6 +42,12 @@ void enviarMensaje(string emisor){
     string mensaje;
     cout << "Receptor: ";
     cin >> receptor;
+
+    // VALIDACIÓN IMPORTANTE
+    if (usuarioExiste(receptor) == false) {
+        cout << ">>> ERROR: El usuario '" << receptor << "' no existe. Mensaje cancelado.\n";
+        return; // ¡Aquí se detiene la función!
+    }
 
     // CORRECCIÓN IMPORTANTE: Limpiar el buffer antes del getline
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
