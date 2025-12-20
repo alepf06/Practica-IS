@@ -11,24 +11,44 @@ Usuario::Usuario() {
 
 bool Usuario::login() {
     string u, p;
+    
     while(intentos_<3){
-    ifstream f("general.txt");
+        ifstream f("general.txt");
+        if (!f.is_open()) {
+            cout << "Error: No existe general.txt. Crea una cuenta primero.\n";
+            return false;
+        }
+        
     cout << "Usuario: "; cin >> u;
     cout << "Contraseña: "; cin >> p;
 
     string linea;
+    bool loginExitoso = false;
+    
     while (getline(f, linea)) {
         stringstream ss(linea);
-        getline(ss, usuario_, ';');
-        getline(ss, contraseña_, ';');
-        getline(ss, rol_, ';');
+        // Declaramos variables AQUÍ para que se limpien en cada vuelta
+        string userFile, passFile, roleFile;
+        
+        getline(ss, userFile, ';');
+        getline(ss, passFile, ';');
+        getline(ss, roleFile, ';');
 
-        if (usuario_ == u && contraseña_ == p) {
-            ofstream log("general.txt", ios::app);
-            log << "LOGIN;" << usuario_ << endl;
-            log.close();
-            return true;
+        if (userFile == u && passFile == p) {
+        // Rellenamos los datos del objeto
+            usuario_ = userFile;
+            contraseña_ = passFile;
+            rol_ = roleFile;
+                
+            loginExitoso = true;
+            break; // Dejamos de leer el fichero
         }
+     }
+    f.close();
+
+    if (loginExitoso) {
+        // ELIMINADO: Ya no escribimos "LOGIN" en general.txt para no romperlo
+        return true;
     }
 
     intentos_++;
@@ -51,17 +71,20 @@ bool Usuario::crearCuenta(){
     cin >> u;
 
     // Comprobar si ya existe
-    while (getline(f, linea)) {
-        stringstream ss(linea);
-        getline(ss, usuario_, ';');
+    if (f.is_open()) {
+        while (getline(f, linea)) {
+            stringstream ss(linea);
+            string userFile;
+            getline(ss, userFile, ';');
 
-        if (usuario_ == u) {
-            cout << "El usuario ya existe\n";
-            f.close();
-            return false;
+            if (userFile == u) {
+                cout << "Error: El usuario '" << u << "' ya existe.\n";
+                f.close();
+                return false;
+            }
         }
+        f.close();
     }
-    f.close();
 
     cout << "Contraseña: ";
     cin >> p;
@@ -93,23 +116,33 @@ bool Usuario::crearCuenta(){
 
 void Usuario::recuperarPassword() {
     ifstream f("general.txt");
-    string u, linea;
-
-    cout << "Introduce tu usuario: ";
-    cin >> u;
-
-    while (getline(f, linea)) {
-        stringstream ss(linea);
-        getline(ss, usuario_, ';');
-        getline(ss, contraseña_, ';');
-
-        if (usuario_ == u) {
-            cout << "Tu contraseña es: " << contraseña_ << endl;
-            f.close();
-            return;
-        }
+    if (!f.is_open()) {
+        cout << "No hay usuarios registrados.\n";
+        return;
     }
 
+    string u, linea;
+    cout << "Introduce tu usuario para recuperar la contraseña: ";
+    cin >> u;
+
+    bool encontrado = false;
+    while (getline(f, linea)) {
+        stringstream ss(linea);
+        string userFile, passFile; // Variables locales
+        
+        getline(ss, userFile, ';');
+        getline(ss, passFile, ';');
+        // No necesitamos el rol aquí
+
+        if (userFile == u) {
+            cout << "Tu contraseña es: " << passFile << endl;
+            encontrado = true;
+            break;
+        }
+    }
     f.close();
-    cout << "Usuario no encontrado\n";
+
+    if (!encontrado) {
+        cout << "Usuario no encontrado.\n";
+    }
 }
