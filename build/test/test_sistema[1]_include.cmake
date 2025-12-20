@@ -1,5 +1,0 @@
-if(EXISTS "/home/i42pifea/Practicas_IS/Proyecto-IS/build/test/test_sistema[1]_tests.cmake")
-  include("/home/i42pifea/Practicas_IS/Proyecto-IS/build/test/test_sistema[1]_tests.cmake")
-else()
-  add_test(test_sistema_NOT_BUILT test_sistema_NOT_BUILT)
-endif()

@@ -1,1 +1,0 @@
-/usr/local/opt/gcc-15.2.0-64/bin/c++ CMakeFiles/test_sistema.dir/test_sistema.cc.o -o test_sistema  ../lib/libgtest_main.a ../src/libsistema.a ../lib/libgtest.a

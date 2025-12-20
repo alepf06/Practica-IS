@@ -1,2 +1,0 @@
-/usr/local/bin/ar qc libsistema.a CMakeFiles/sistema.dir/clases.cc.o CMakeFiles/sistema.dir/chat.cc.o CMakeFiles/sistema.dir/asignacion.cc.o CMakeFiles/sistema.dir/alerta.cc.o
-/usr/local/bin/ranlib libsistema.a
