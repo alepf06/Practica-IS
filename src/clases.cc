@@ -46,6 +46,7 @@ bool Usuario::crearCuenta(){
     ifstream f("general.txt");
     string u, p, r, linea;
 
+    cout << "--- CREAR CUENTA ---\n";
     cout << "Nuevo usuario: ";
     cin >> u;
 
@@ -64,14 +65,29 @@ bool Usuario::crearCuenta(){
 
     cout << "Contraseña: ";
     cin >> p;
-    cout << "Rol (Alumno/Tutor/Coordinador): ";
-    cin >> r;
 
+    // 2. BUCLE DE VALIDACIÓN DEL ROL
+    // Repetirá la pregunta hasta que el usuario escriba una opción válida
+    bool rolValido = false;
+    do {
+        cout << "Rol (Alumno/Tutor/Coordinador): ";
+        cin >> r;
+
+        // Comprobamos que sea exactamente una de las 3 opciones (respetando mayúsculas)
+        if (r == "Alumno" || r == "Tutor" || r == "Coordinador") {
+            rolValido = true;
+        } else {
+            cout << "Error: Rol no válido. Escribe 'Alumno', 'Tutor' o 'Coordinador' tal cual.\n";
+        }
+
+    } while (!rolValido);
+
+    // 3. Guardar en fichero
     ofstream out("general.txt", ios::app);
     out << u << ";" << p << ";" << r << endl;
     out.close();
 
-    cout << "Cuenta creada correctamente\n";
+    cout << ">> Cuenta creada correctamente como " << r << ".\n";
     return true;
 }
 
