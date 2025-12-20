@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <limits> // Para numeric_limits
 
 using namespace std;
 
@@ -10,19 +11,33 @@ void enviarMensaje(string emisor){
     string mensaje;
     cout << "Receptor: ";
     cin >> receptor;
-    cin.ignore();
+
+    // CORRECCIÓN IMPORTANTE: Limpiar el buffer antes del getline
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
     cout << "Mensaje: ";
     getline(cin, mensaje);
 
+    // Validar que no se envíe vacío
+    if(mensaje.empty()) {
+        cout << "Error: El mensaje no puede estar vacío.\n";
+        return;
+    }
+    
     ofstream f("mensajes.txt", ios::app);
-    f << emisor << ";" << receptor << ";" << mensaje << endl;
-    f.close();
+    if(f.is_open()){
+        f << emisor << ";" << receptor << ";" << mensaje << endl;
+        f.close();
+        cout << ">> Mensaje enviado correctamente.\n";
+    } else {
+        cout << "Error: No se pudo escribir en mensajes.txt\n";
+    }
 }
 
 void verMensajes(string usuario){
     ifstream f("mensajes.txt");
     if (!f.is_open()) {
-        cout << "No se puede abrir el archivo de mensajes.\n";
+        cout << "No hay historial de mensajes (o no se pudo abrir el archivo).\n";
         return;
     }
 
@@ -41,14 +56,15 @@ void verMensajes(string usuario){
         if (usuario == emisor || usuario == receptor) {
             encontrados = true;
             cout << "---------------------------\n";
-            cout << "De: " << emisor << "\n";
-            cout << "Para: " << receptor << "\n";
-            cout << "Mensaje: " << mensaje << "\n";
+            cout << (emisor == usuario ? "Yo" : emisor) << " -> " 
+                 << (receptor == usuario ? "Mí" : receptor) << ":\n";
+            cout << "   \"" << mensaje << "\"\n";
         }
     }
+    f.close();
 
     if (!encontrados) {
-        cout << "No hay mensajes para mostrar.\n";
+        cout << "Buzón vacío.\n";
     }
     cout << "===============================\n";
 }
