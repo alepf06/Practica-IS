@@ -7,6 +7,31 @@
 
 using namespace std;
 
+// =========================================================
+// FUNCIÓN AUXILIAR (Privada de este archivo)
+// Comprueba si existe un usuario con un ROL específico
+// =========================================================
+bool existeUsuarioYRol(string nombre, string rolEsperado) {
+    ifstream f("general.txt");
+    if (!f.is_open()) return false;
+
+    string linea, u, p, r;
+    while (getline(f, linea)) {
+        stringstream ss(linea);
+        getline(ss, u, ';'); // Usuario
+        getline(ss, p, ';'); // Contraseña
+        getline(ss, r, ';'); // Rol
+
+        // Comprobamos nombre Y rol
+        if (u == nombre && r == rolEsperado) {
+            f.close();
+            return true;
+        }
+    }
+    f.close();
+    return false;
+}
+
 // Función auxiliar para ver listas (Soluciona "listar alumnos y tutores")
 void Coordinador::listarUsuariosPorRol(string rolBuscado) {
     ifstream f("general.txt");
