@@ -68,5 +68,6 @@ void enviarMensaje(string emisor);
 void verMensajes(string usuario);
 void evaluarAlumno();        // genera alertas automáticas
 void verAlertas(string usuario);
+bool usuarioExiste(string nombreBuscado);
 
 #endif
