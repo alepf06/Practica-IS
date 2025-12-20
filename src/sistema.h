@@ -2,6 +2,7 @@
 #define SISTEMA_H
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -56,16 +57,16 @@ class Coordinador : public Usuario{
                 void menu();
                 void asignarTutor();
                 void verAsignaciones();
+                // NUEVAS FUNCIONES
+                void listarUsuariosPorRol(string rolBuscado); 
+                void asignacionAutomatica();
 };
 
 /* Prototipos globales */
 
 void enviarMensaje(string emisor);
-
 void verMensajes(string usuario);
-
 void evaluarAlumno();        // genera alertas automáticas
-
 void verAlertas(string usuario);
 
 #endif
