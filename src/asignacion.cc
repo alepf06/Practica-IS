@@ -84,6 +84,20 @@ void Coordinador::asignarTutor(){
         return; // Salimos de la función sin guardar nada
     }
 
+    //Verificar si el alumno YA tiene tutor (opcional pero recomendado)
+    ifstream fCheck("asignaciones.txt");
+    string linea, t, a;
+    while(getline(fCheck, linea)){
+        stringstream ss(linea);
+        getline(ss, t, ';');
+        getline(ss, a);
+        if(a == alumno){
+            cout << "AVISO: El alumno " << alumno << " ya tenía asignado al tutor " << t << ".\n"; 
+            // Aquí podrías poner un return si quieres prohibir reasignaciones
+        }
+    }
+    fCheck.close();
+
     ofstream f("asignaciones.txt", ios::app);
     if(f.is_open()){
         f << tutor << ";" << alumno << endl;
@@ -102,6 +116,11 @@ void Coordinador::asignacionAutomatica(){
 
     // 1. Cargar Tutores y Alumnos desde general.txt
     ifstream fGen("general.txt");
+    if (!fGen.is_open()) {
+        cout << "Error: No se encuentra general.txt\n";
+        return;
+    }
+    
     string linea, u, p, r;
     while(getline(fGen, linea)){
         stringstream ss(linea);
@@ -126,7 +145,9 @@ void Coordinador::asignacionAutomatica(){
             string t, a;
             getline(ss, t, ';');
             getline(ss, a, ';');
-            alumnosYaAsignados.push_back(a);
+            if (!a.empty()) {
+                alumnosYaAsignados.push_back(a);
+            }
         }
         fAsign.close();
     }
@@ -146,6 +167,7 @@ void Coordinador::asignacionAutomatica(){
             }
         }
 
+        // Solo asignamos si NO tiene tutor
         if(!yaTieneTutor){
             // Asignar al siguiente tutor (Round Robin)
             string tutorAsignado = tutores[tutorIndex];
@@ -154,7 +176,11 @@ void Coordinador::asignacionAutomatica(){
             cout << "Asignando " << alumno << " -> " << tutorAsignado << endl;
             
             asignadosCount++;
-            tutorIndex = (tutorIndex + 1) % tutores.size(); // Ciclar tutores
+            
+            tutorIndex++;
+            if (tutorIndex >= tutores.size()) {
+                tutorIndex = 0; // Volver al primer tutor
+            }
         }
     }
     fOut.close();
