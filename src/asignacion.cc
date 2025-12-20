@@ -63,16 +63,32 @@ void Coordinador::asignarTutor(){
     
     string tutor;
     string alumno;
+    
     cout << "Tutor: ";
     cin >> tutor;
+    
+    // --- AQUÍ ESTABA EL ERROR: Faltaba esta comprobación ---
+    if (existeUsuarioYRol(tutor, "Tutor") == false) {
+        cout << "ERROR: El usuario '" << tutor << "' no existe o no es un Tutor.\n";
+        cout << "Asignación cancelada.\n";
+        return; // Salimos de la función sin guardar nada
+    }
+    
     cout << "Alumno: ";
     cin >> alumno;
+
+    // --- Validación del Alumno ---
+    if (existeUsuarioYRol(alumno, "Alumno") == false) {
+        cout << "ERROR: El usuario '" << alumno << "' no existe o no es un Alumno.\n";
+        cout << "Asignación cancelada.\n";
+        return; // Salimos de la función sin guardar nada
+    }
 
     ofstream f("asignaciones.txt", ios::app);
     if(f.is_open()){
         f << tutor << ";" << alumno << endl;
         f.close();
-        cout << ">> Asignación guardada exitosamente.\n";
+        cout << ">> Asignación guardada exitosamente: " << tutor << " -> " << alumno << endl;
     } else {
         cout << "Error crítico: No se pudo abrir asignaciones.txt\n";
     }
